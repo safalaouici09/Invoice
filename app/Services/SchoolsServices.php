@@ -47,13 +47,13 @@ class SchoolsServices
         }
     }
 
-    public static function getListPaiements($eleveId)
+   /* public static function getListPaiements()
     {
         $server = env('SERVER', 'https://isodev.datafirst-dz.com');
         $app = env('APP', '/ws/public');
         $url = "$server$app";
         $user = Auth::user();
-        $parentId = $user->parent_id;
+        
         $cookieHeaders = json_decode($user->cookies, true);
 
         $response = Http::withHeaders([
@@ -62,10 +62,9 @@ class SchoolsServices
             'User-Agent' => 'dio',
             'Connection' => 'keep-alive',
             'Accept-Encoding' => 'gzip, deflate, br',
-        ])->post("$url/api/StudentContractPaiements", [
+        ])->post("$url/Paiements", [
                     '_token' => $user->token,
-                    'eleve_id' => $eleveId,
-                    'responsable_id' => $parentId,
+                   
                 ]);
 
 
@@ -78,13 +77,46 @@ class SchoolsServices
 
                 return $data['data'];
             } else {
-                return [];
+              
+                return $response->failed();
 
             }
-        } else {
-            return [];
+        } else {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+            return $response;
         }
+   }*/
+   public static function getListPaiements()
+{
+    $server = env('SERVER', 'https://isodev.datafirst-dz.com');
+    $app = env('APP', '/ws/public');
+    $url = "$server$app/api/Paiements"; // Include the endpoint here
+    $user = Auth::user();
+
+    $cookieHeaders = json_decode($user->cookies, true);
+
+    $response = Http::withHeaders([
+        'X-CSRF-TOKEN' => $user->token,
+        'Cookie' => implode('; ', $cookieHeaders),
+        'User-Agent' => 'dio',
+        'Connection' => 'keep-alive',
+        'Accept-Encoding' => 'gzip, deflate, br',
+    ])->post($url, [
+        '_token' => $user->token,
+    ]);
+
+    if (!$response->failed()) {
+        $data = $response->json();
+
+        if (isset($data['success']) && $data['success'] === true) {
+            return $data['data'];
+        } else {
+            return $response->failed();
+        }
+    } else {
+        return $response;
     }
+}
+
     public static function getListAbsences($date_debut, $date_fin)
     {
         $server = env('SERVER', 'https://isodev.datafirst-dz.com');
@@ -151,6 +183,7 @@ class SchoolsServices
                 ]);
 
         if (!$response->failed()) {
+         
             $data = $response->json();
 
             if (isset($data['success']) && $data['success'] === true) {

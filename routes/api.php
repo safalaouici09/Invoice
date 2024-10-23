@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PaiementRedirect;
+use App\Services\SchoolsServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,3 +22,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/payer', [PaiementRedirect::class, 'index']);
 Route::Post('/payer', [PaiementRedirect::class, 'index']);
+
+Route::Post('/Paiements', [SchoolsServices::class, 'index']);
